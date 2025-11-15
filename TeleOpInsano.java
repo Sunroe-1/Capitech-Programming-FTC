@@ -1,5 +1,4 @@
-// Imports necessary for FTC OpMode, hardware control, and IMU access.
-package org.firstinspires.ftc.teamcode;
+// Removed: package org.firstinspires.ftc.teamcode; - FIX for OnBotJava "public class" error
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -64,9 +63,11 @@ public class TeleOPInsano extends OpMode {
         imu = hardwareMap.get(IMU.class, "imu");
 
         // Set the orientation of the control hub on the robot
+        // FIX: Changed constructor argument order to (LogoFacingDirection, UsbFacingDirection)
+        // to resolve the incompatible types error.
         RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.UsbFacingDirection.UP,
-                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD);
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,      // Logo is facing UP (perpendicular to chassis)
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD); // USB ports are facing FORWARD
         
         imu.initialize(new IMU.Parameters(RevOrientation));
 
@@ -157,6 +158,7 @@ public class TeleOPInsano extends OpMode {
         }
 
         // A Button: Force stop the toggle state
+        // NOTE: The A button for drive yaw reset is on gamepad1, while this A button is on gamepad2.
         if (gamepad2.a) {
             isShooterRunning = false; // Clears the toggle state
             shooterPower = 0.0;       // Ensures immediate stop
@@ -247,7 +249,5 @@ public class TeleOPInsano extends OpMode {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        Intake.setPower(0);
-        Shooter.setPower(0);
     }
 }
