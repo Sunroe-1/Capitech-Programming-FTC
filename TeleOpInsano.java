@@ -247,5 +247,7 @@ public class TeleOPInsano extends OpMode {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+        Intake.setPower(0);
+        Shooter.setPower(0);
     }
 }
