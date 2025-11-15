@@ -22,6 +22,10 @@ public class TeleOPInsano extends OpMode {
     private DcMotor Intake, Shooter;
     private IMU imu;
 
+    // --- State Variables for Mechanism Control (Shooter Toggle) ---
+    private boolean isShooterRunning = false; // State to track if the shooter is in the constant ON mode
+    private boolean wasLeftTriggerPressed = false; // State for "edge detection" of the L-Trigger
+
     /**
      * Initializes the robot hardware, including the motors and the IMU.
      * This method is called when the Init button is pressed on the Driver Station.
@@ -38,19 +42,19 @@ public class TeleOPInsano extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
 
         // --- 2. Motor Directions (Standard Mecanum Configuration) ---
-        // Assuming your robot drive system is configured such that the right side
+        // Assuming your robot drive system is configured such that the left side
         // must be reversed for the wheels to turn the same way.
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
-        // Intake/Shooter directions might need adjustment
+
+        // Set mechanism directions (Shooter needs to run forward to shoot)
         Intake.setDirection(DcMotor.Direction.FORWARD);
         Shooter.setDirection(DcMotor.Direction.FORWARD);
 
         // --- 3. Motor Run Modes ---
         // For TeleOp drive, RUN_WITHOUT_ENCODER is standard.
-        // It provides direct power control (0 to 1), which is generally best for driver responsiveness.
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -82,14 +86,16 @@ public class TeleOPInsano extends OpMode {
 
     /**
      * This method is called repeatedly after the user presses the Play button.
-     * It handles reading joystick input and executing the field-oriented drive logic.
+     * It handles reading joystick input and executing the field-oriented drive logic,
+     * as well as controlling the Intake and Shooter.
      */
     @Override
     public void loop() {
-        // --- Joystick Reading ---
-        // We use the negative of gamepad1.right_stick_y because the Y-axis on gamepads
-        // is typically positive when pushing DOWN, but we want UP to be positive (forward).
-        // The D-pad or a button (like A) can be used to manually reset the yaw.
+        // ---------------------------------------------------------------------
+        //                         1. DRIVE CONTROL (GAMEPAD 1)
+        // ---------------------------------------------------------------------
+        
+        // Manual Yaw Reset (A Button)
         if (gamepad1.a) {
             imu.resetYaw();
             telemetry.addData("IMU", "Yaw Reset to 0");
@@ -102,19 +108,71 @@ public class TeleOPInsano extends OpMode {
         // Left Stick X for Rotation (Spin)
         double yaw = gamepad1.left_stick_x;
 
-        // Apply a small cubic curve to translational inputs for smoother low-speed control
-        // Note: For FTC, it is common to cube the power: power = power * power * power;
+        // Apply input shaping (cubing) for smoother low-speed control
         axial = axial * axial * axial;
         lateral = lateral * lateral * lateral;
-        // Rotation can be linear for quick response
-        yaw = yaw * 0.75; // Reduce rotational sensitivity slightly
+        yaw = yaw * 0.75; 
 
         // Execute Field-Relative Drive
         driveFieldRelative(axial, lateral, yaw);
 
-        // Optional: Telemetry to debug values
+        // ---------------------------------------------------------------------
+        //                       2. MECHANISM CONTROL (GAMEPAD 2)
+        // ---------------------------------------------------------------------
+
+        // --- Intake Logic (Simple Power Control) ---
+        double intakePower = 0.0;
+        if (gamepad2.right_trigger > 0.1) {
+            intakePower = 1.0; // Right Trigger: Intake motor runs normally (FORWARD)
+        } else if (gamepad2.right_bumper) {
+            intakePower = -1.0; // Right Bumper: Intake motor runs in reverse (REVERSE)
+        }
+        Intake.setPower(intakePower);
+
+        // --- Shooter Logic (Toggle State Machine with Override) ---
+        double shooterPower = 0.0;
+        boolean isTriggerPulled = gamepad2.left_trigger > 0.1;
+
+        // 1. Toggle ON/OFF Logic (Edge Detection on Left Trigger)
+        // This toggles the constant running state only when the trigger is first pressed (rising edge).
+        if (isTriggerPulled && !wasLeftTriggerPressed) {
+            // Toggle the state: if running, set to stop. If stopped, set to run.
+            isShooterRunning = !isShooterRunning;
+        }
+        wasLeftTriggerPressed = isTriggerPulled; // Update state for next loop
+
+        // 2. State-Based Power Assignment
+        if (isShooterRunning) {
+            shooterPower = 1.0; // Constant running power when toggled ON
+        }
+
+        // 3. Override Conditions (Reverse / Force Stop)
+        
+        // Left Bumper: Force reverse
+        if (gamepad2.left_bumper) {
+            shooterPower = -1.0; 
+            // The requirement is: "won't stop the motor but simply reverse it."
+            // By overriding shooterPower here, it runs in reverse regardless of the toggle state.
+            // When released, it reverts to the isShooterRunning state (constant run or off).
+        }
+
+        // A Button: Force stop the toggle state
+        if (gamepad2.a) {
+            isShooterRunning = false; // Clears the toggle state
+            shooterPower = 0.0;       // Ensures immediate stop
+        }
+
+        Shooter.setPower(shooterPower);
+
+        // ---------------------------------------------------------------------
+        //                         3. TELEMETRY
+        // ---------------------------------------------------------------------
+
         telemetry.addData("IMU Yaw (Deg)", "%.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.addData("Movement", "Axial: %.2f, Lateral: %.2f, Yaw: %.2f", axial, lateral, yaw);
+        telemetry.addData("Drive Movement", "Axial: %.2f, Lateral: %.2f, Yaw: %.2f", axial, lateral, yaw);
+        telemetry.addData("Intake Power", "%.2f", intakePower);
+        telemetry.addData("Shooter State", isShooterRunning ? "RUNNING (Toggle ON)" : "OFF");
+        telemetry.addData("Shooter Power", "%.2f", Shooter.getPower());
         telemetry.update();
     }
 
@@ -133,13 +191,12 @@ public class TeleOPInsano extends OpMode {
         double backRightPower = forward + strafe - rotate;
 
         // --- Power Scaling (Normalization) ---
-        // This ensures no motor attempts to go above 1.0 power.
         double maxPower = Math.max(
             Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)),
             Math.max(Math.abs(backLeftPower), Math.abs(backRightPower))
         );
 
-        // If the max power exceeds 1.0, scale all powers down proportionally.
+        // Scale all powers down proportionally if any motor attempts to go above 1.0.
         if (maxPower > 1.0) {
             frontLeftPower /= maxPower;
             frontRightPower /= maxPower;
@@ -163,22 +220,16 @@ public class TeleOPInsano extends OpMode {
      */
     public void driveFieldRelative(double forward, double strafe, double rotate) {
         // 1. Get current robot heading (Yaw)
-        // Ensure AngleUnit.RADIANS is used for trigonometric functions
         double robotYaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         // 2. Calculate the desired angle and magnitude of the joystick vector (Field-Relative)
-        // Math.atan2(y, x) gives the angle of the vector (strafe, forward)
         double inputAngle = Math.atan2(strafe, forward); 
         double magnitude = Math.hypot(forward, strafe);
 
         // 3. Rotate the desired movement vector by the robot's negative heading
-        // This converts the Field-Relative vector into a Robot-Relative vector.
         double driveAngle = inputAngle - robotYaw;
 
         // 4. Calculate the new Robot-Relative X and Y components (Forward/Strafe)
-        // Note: The cosine and sine are intentionally swapped here compared to standard trig,
-        // because in the standard FTC coordinate system, Y (forward) is typically sine 
-        // and X (strafe) is typically cosine when using atan2(y, x) with Y=forward.
         double newStrafe = magnitude * Math.cos(driveAngle);
         double newForward = magnitude * Math.sin(driveAngle);
 
