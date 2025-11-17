@@ -121,12 +121,7 @@ public class TeleOPTeste1 extends OpMode {
         // Your drive functions expect "forward" to be a positive value.
         // We must *negate* the right_stick_y value to correct this.
         // ROBOT-CENTRIC CHANGE: Renamed 'fieldForward' to 'robotForward'
-        
-        // USER REQUEST CHANGE: Removed the negation (-) from gamepad1.right_stick_y.
-        // Now, pushing UP (Y = -1.0) will result in a negative 'robotForward' value (backward).
-        // Pushing DOWN (Y = +1.0) will result in a positive 'robotForward' value (forward).
-        double robotForward = gamepad1.right_stick_y;
-        
+        double robotForward = -gamepad1.right_stick_y;
         // ROBOT-CENTRIC CHANGE: Renamed 'fieldStrafe' to 'robotStrafe'
         double robotStrafe = gamepad1.right_stick_x;
 
