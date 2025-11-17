@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 // REFINEMENT: Removed 'org.firstinspires.ftc.robotcore.external.navigation.Orientation' as it wasn't being used.
 
 // REFINEMENT: Corrected spelling from '@TeleOP' to '@TeleOp'
-@TeleOp(name = "TeleOpInsano", group = "TeleOp")
-public class TeleOPInsano extends OpMode {
+@TeleOp(name = "TeleOpTeste1", group = "TeleOp")
+public class TeleOPTeste1 extends OpMode {
     private DcMotor frontRight, backRight, frontLeft, backLeft;
     private DcMotor Intake, Shooter;
     private IMU imu;
@@ -192,11 +192,11 @@ public class TeleOPInsano extends OpMode {
         // Left Bumper is an override (reverse)
         // This check comes first, as it's the highest priority.
         if (isLeftBumperPressed) {
-            Shooter.setPower(-1.0);
+            Shooter.setPower(1.0);
         }
         // If not overriding, check the "memory"
         else if (isShooterRunning) {
-            Shooter.setPower(1.0); // State is ON, run forward
+            Shooter.setPower(-1.0); // State is ON, run forward
         }
         // If not overriding and not ON
         else {
