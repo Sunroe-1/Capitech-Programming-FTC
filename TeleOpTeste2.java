@@ -128,7 +128,6 @@ public class TeleOPTeste1 extends OpMode {
         // 3. Read joystick value for Robot Rotation (Left Stick)
         // CHANGE: Removed the negation to reverse rotation direction.
         double robotRotate = -gamepad1.left_stick_x;
-
         // 4. Apply the deadband to all inputs
         // ROBOT-CENTRIC CHANGE: Updated variable names
         if (Math.abs(robotForward) < DEADBAND_THRESHOLD) {
