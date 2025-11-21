@@ -196,7 +196,7 @@ public class TeleOpTeste2 extends OpMode {
         max = Math.max(max, Math.abs(backLeftPower));
         max = Math.max(max, Math.abs(backRightPower));
 
-        if (max > 1.0) {
+        if (max > 0.8) {
             frontLeftPower /= max;
             frontRightPower /= max;
             backLeftPower /= max;
