@@ -30,8 +30,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
 http://192.168.43.1:8080/java/editor.html?/src/org/firstinspires/ftc/teamcode/AutonomousPrime.java
-@Autonomous(name = "AutonomousPrime", group = "Autonomous")
-public class AutonomousPrime extends LinearOpMode {
+@Autonomous(name = "AutonomousPrimeBlue", group = "Autonomous")
+public class AutonomousPrimeBlue extends LinearOpMode {
     private DcMotor frontRight, backRight, frontLeft, backLeft;
     private DcMotor Intake, Shooter;
     private IMU imu;
@@ -76,15 +76,27 @@ public class AutonomousPrime extends LinearOpMode {
         );
         
 
-        frontLeft.setPower(1);
-        sleep (1000);
-        frontRight.setPower(1);
-        sleep (1000);
-        backLeft.setPower(1);
-        sleep (1000);
-        backRight.setPower(1);
-        sleep (1000);
-        break;
+        frontLeft.setPower(0.8);
+        frontRight.setPower(0.6);
+        backLeft.setPower(0.6);
+        backRight.setPower(0.6);
+        sleep (2000);
+        frontRight.setPower(0.8);
+        frontLeft.setPower(0.2);
+        backRight.setPower(0.2);
+        backLeft.setPower(0.8);
+        sleep (2000);
+        backLeft.setPower(0.3);
+        backRight.setPower(0.3);
+        frontLeft.setPower(0.8);
+        frontRight.setPower(0.6);
+        sleep (2000);
+        backRight.setPower(0.8);
+        backLeft.setPower(0.8);
+        frontLeft.setPower(0.8);
+        frontRight.setPower(0.8);
+        sleep (2000);
+        
 
         imu.initialize(new IMU.Parameters(revOrientation));
 
