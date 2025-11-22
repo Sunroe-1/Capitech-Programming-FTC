@@ -75,28 +75,48 @@ public class AutonomousPrimeBlue extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         );
         
-
-        frontLeft.setPower(0.8);
-        frontRight.setPower(0.6);
-        backLeft.setPower(0.6);
-        backRight.setPower(0.6);
-        sleep (2000);
+        //Movimento 1 - Andar pra esquerda para a base AZUL. 
+        frontLeft.setPower(-0.8);
         frontRight.setPower(0.8);
-        frontLeft.setPower(0.2);
-        backRight.setPower(0.2);
         backLeft.setPower(0.8);
-        sleep (2000);
+        backRight.setPower(-0.8);
+        sleep(800);
+        
+        //Movimento 2 - Parar para o jogador humano colocar os artefatos dentro no robô.
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        //Movimento 3 - Andar pra direita para o triângulo inferior.
+        frontLeft.setPower(0.8);
+        frontRight.setPower(-0.8);
+        backLeft.setPower(-0.8);
+        backRight.setPower(0.8);
+        sleep(800);
+        //movimento 4 - Ajuste de ângulo para o shooter.
+        frontLeft.setPower(0.3);
+        frontRight.setPower(0);
         backLeft.setPower(0.3);
         backRight.setPower(0.3);
-        frontLeft.setPower(0.8);
-        frontRight.setPower(0.6);
-        sleep (2000);
-        backRight.setPower(0.8);
-        backLeft.setPower(0.8);
-        frontLeft.setPower(0.8);
-        frontRight.setPower(0.8);
-        sleep (2000);
-        
+        sleep(400);
+        //movimento 5 - Ajuste de ângulo para o shooter.
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        Shooter.setPower(0.9);
+        Intake.setPower(0.9);
+        sleep(5000);
+        //Parar todos os motores
+        Shooter.setPower(0);
+        Intake.setPower(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+
 
         imu.initialize(new IMU.Parameters(revOrientation));
 

@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -73,35 +74,56 @@ public class AutonomousPrimeRed extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         );
         
-
-        frontLeft.setPower(0.8);
+        //Vai pra frente - levemente pra esquerda
+        frontLeft.setPower(0.6);
         frontRight.setPower(0.6);
         backLeft.setPower(0.6);
         backRight.setPower(0.6);
-        sleep (2000);
+        sleep (1000);
+        // Vai pra trás - levemente pra esquerda
+        frontLeft.setPower(-0.6);
+        frontRight.setPower(-0.6);
+        backLeft.setPower(-0.6);
+        backRight.setPower(-0.6);
+        sleep(1000);
+        // Teste 1
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        sleep(2000);
+        //teste 2 - Andar de lado esquerdo - levemente para a cima
+        frontLeft.setPower(-0.8);
         frontRight.setPower(0.8);
-        frontLeft.setPower(0.2);
-        backRight.setPower(0.2);
         backLeft.setPower(0.8);
-        sleep (2000);
-        backLeft.setPower(0.3);
-        backRight.setPower(0.3);
+        backRight.setPower(-0.8);
+        sleep(1000);
+        //teste 3 - Andar de lado direito - levemente para a cima
         frontLeft.setPower(0.8);
-        frontRight.setPower(0.6);
-        sleep (2000);
+        frontRight.setPower(-0.8);
+        backLeft.setPower(-0.8);
         backRight.setPower(0.8);
-        backLeft.setPower(0.8);
-        frontLeft.setPower(0.8);
-        frontRight.setPower(0.8);
-        sleep (2000);
-        
+        sleep(1500);
+        //teste 4 - Intake e Shooter
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        Intake.setPower(0.8);
+        Shooter.setPower(0.8);
+        sleep(5000);
+        //Faz o robô parar :)
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+    
 
         imu.initialize(new IMU.Parameters(revOrientation));
 
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running");
-            telemetry.addData("Yaw", imu.getYaw());
-            telemetry.addData("Meow meow, robot is running", "Meow, meow and meow ;3");
+            telemetry.addData("Meow meow, robot is running", "Meow, meow and meow :3");
             telemetry.update();
          
 
