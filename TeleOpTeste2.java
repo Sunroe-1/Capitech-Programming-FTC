@@ -18,7 +18,11 @@ public class TeleOpTeste2 extends OpMode {
     private boolean isShooterRunning = false; // Remembers if the shooter should be ON or OFF
     private boolean wasLeftTriggerPressed = false; // Remembers the trigger's state from the *last loop*
     private boolean wasAButtonPressed = false; // Remembers the 'A' button's state from the *last loop*
-
+ 
+    private boolean wasBButtonPressed = false; // remembers the state of the B button
+    private boolean wasXButtonPressed = false; // remembers the state of the X button
+    private boolean wasYButtonPressed = false; // remembers the state of the Y button
+    
     /**
      * Initializes the robot hardware, including the motors and the IMU.
      * This method is called when the Init button is pressed on the Driver Station.
@@ -156,6 +160,28 @@ public class TeleOpTeste2 extends OpMode {
         // D. Update "previous" state variables for the *next* loop
         wasLeftTriggerPressed = isLeftTriggerPressed;
         wasAButtonPressed = isAButtonPressed;
+
+
+    boolean isYButtonPressed = gamepad1.y;
+    boolean isXButtonPressed = gamepad1.x;
+    boolean isBButtonPressed = gamepad1.b;
+    
+    if (isYButtonPressed) {
+        Shooter.setPower(0.6);
+    } else if (isXButtonPressed) {
+        Shooter.setPower(-0.6);
+    } else {
+        Shooter.setPower(0.6);
+    }
+
+
+
+
+
+
+
+
+
 
         // --- End of Intake and Shooter Controls ---
 
