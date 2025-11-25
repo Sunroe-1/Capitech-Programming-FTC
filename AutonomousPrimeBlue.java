@@ -79,7 +79,7 @@ public class AutonomousPrimeBlue extends LinearOpMode {
         frontLeft.setPower(-0.8);
         frontRight.setPower(0.8);
         backLeft.setPower(0.8);
-        backRight.setPower(-0.8);
+        backRight.setPower(-0.);
         sleep(800);
         
         //Movimento 2 - Parar para o jogador humano colocar os artefatos dentro no robô.
