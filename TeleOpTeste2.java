@@ -15,9 +15,15 @@ public class TeleOpTeste2 extends OpMode {
 
     // --- State variables for Shooter toggle ---
     // These variables act as the robot's "memory"
+
     private boolean isShooterRunning = false; // Remembers if the shooter should be ON or OFF
     private boolean wasLeftTriggerPressed = false; // Remembers the trigger's state from the *last loop*
     private boolean wasAButtonPressed = false; // Remembers the 'A' button's state from the *last loop*
+    +
+    private boolean wasBButtonPressed = false; // Remembers the 'B' button's state from the *last loop*
+    private boolean wasXButtonPressed = false; // Remembers the 'X' button's state from the *last loop*
+    private boolean wasYButtonPressed = false; // Remembers the 'Y' button's state from the *last loop*
+    
 
     /**
      * Initializes the robot hardware, including the motors and the IMU.
@@ -105,6 +111,49 @@ public class TeleOpTeste2 extends OpMode {
         // 5. Call the ROBOT-CENTRIC drive function
         drive(robotForward, robotStrafe, robotRotate);
 
+        boolean isBButtonPressed = gamepad1.b;
+        boolean isYButtonPressed = gamepad1.y;
+
+        if (isBButtonPressed && !wasBButtonPressed) {
+            isShooterRunning = true; // Turn the shooter's "memory" ON
+        }
+        
+        // Check for 'A' Button *press* (was not pressed, now is) -> Toggle OFF
+        if (isAButtonPressed && !wasAButtonPressed) {
+            isShooterRunning = false; // Turn the shooter's "memory" OFF
+        }
+
+       if (isYButtonPressed && !wasYButtonPressed) {
+            isShooterRunning = true; // Turn the shooter's "memory" ON
+        }
+        
+        // Check for 'A' Button *press* (was not pressed, now is) -> Toggle OFF
+        if (isAButtonPressed && !wasAButtonPressed) {
+            isShooterRunning = false; // Turn the shooter's "memory" OFF
+        }
+
+
+        if (gamepad1.b) {
+            Shooter.setPower(Power1);
+        }   
+        else if (gamepad1.x) {
+            Shooter.setPower(Power2);
+        }
+        else {
+            Shooter.setPower(0.0);
+        }
+        
+        if (gamepad1.x) {
+            Shooter.setPower(Power2);
+        }   
+        else if (gamepad1.x) {
+            Shooter.setPower(Power1);
+        }
+        else {
+            Shooter.setPower(0.0);
+        }
+        
+
         // --- Intake and Shooter Controls ---
 
         // --- 1. Intake Logic (Simple If/Else If/Else) ---
@@ -153,7 +202,15 @@ public class TeleOpTeste2 extends OpMode {
             Shooter.setPower(0.0); // State is OFF, stop
         }
         
+       
+
+       Shooter.setPower(Power1); = Shooter.setPower(-0.8);
+       Shooter.SetPower(Power2); = Shooter.SetPower(-0.7);
+
+
         // D. Update "previous" state variables for the *next* loop
+        wasBButtonPressed = isBButtonPressed;
+        wasXButtonPressed = isXButtonPressed;
         wasLeftTriggerPressed = isLeftTriggerPressed;
         wasAButtonPressed = isAButtonPressed;
 
