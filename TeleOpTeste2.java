@@ -18,7 +18,7 @@ public class TeleOpTeste1 extends OpMode {
     private IMU imu;
 
     // 2. CONSTANTS (Ticks Per Revolution - TPR)
-    private static final double SHOOTER_TPR = 537.6; // 20:1 UltraPlanetary
+    private static final double SHOOTER_TPR = 28; // 20:1 UltraPlanetary
     private static final double INTAKE_TPR = 288.0;   // 72:1 Core Hex
     private static final double TARGET_SHOOTER_RPM = 1200.0;
     private static final double RPM_TOLERANCE = 50.0; // +/- 50 RPM tolerance
