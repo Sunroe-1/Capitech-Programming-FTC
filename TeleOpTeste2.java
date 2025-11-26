@@ -20,7 +20,7 @@ public class TeleOpTeste1 extends OpMode {
     // 2. CONSTANTS (Ticks Per Revolution - TPR)
     private static final double SHOOTER_TPR = 28; // 20:1 UltraPlanetary
     private static final double INTAKE_TPR = 288.0;   // 72:1 Core Hex
-    private static final double TARGET_SHOOTER_RPM = 1200.0;
+    private static final double TARGET_SHOOTER_RPM = -3200.0;
     private static final double RPM_TOLERANCE = 50.0; // +/- 50 RPM tolerance
 
     // 3. STATE VARIABLES
@@ -172,8 +172,6 @@ public class TeleOpTeste1 extends OpMode {
 
 
         // I. TELEMETRY DISPLAY
-        telemetry.addData("--- DRIVE ---", "");
-        telemetry.addData("Robot Rotate (LeftX)", "%.2f", robotRotate);
         
         telemetry.addData("--- SHOOTER STATUS ---", "");
         // Missing Element: Color-Changing Telemetry
@@ -182,11 +180,12 @@ public class TeleOpTeste1 extends OpMode {
         telemetry.addData("Current RPM", "%.0f", shooterRPM);
         telemetry.addData("Current RPS", "%.2f", shooterRPS);
         telemetry.addData("Current Ticks", shooterTicks);
-        
+        telemetry.addData("Meow meow, I'm a cat! :3", ""); //just for fun
         telemetry.addData("--- SUBSYSTEMS ---", "");
         telemetry.addData("Intake Power", Intake.getPower());
         telemetry.addData("Shooter State (0/1/2)", shooterState);
         telemetry.addData("Yaw (Degrees)", "%.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+
         
         telemetry.update();
     }

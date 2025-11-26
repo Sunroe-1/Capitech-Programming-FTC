@@ -33,8 +33,14 @@ http://192.168.43.1:8080/java/editor.html?/src/org/firstinspires/ftc/teamcode/Au
 @Autonomous(name = "AutonomousPrimeBlue", group = "Autonomous")
 public class AutonomousPrimeBlue extends LinearOpMode {
     private DcMotor frontRight, backRight, frontLeft, backLeft;
-    private DcMotor Intake, Shooter;
+    private DcMotorEx Intake, Shooter; // CORRECT: Use DcMotorEx for velocity features
     private IMU imu;
+
+    // 2. CONSTANTS (Ticks Per Revolution - TPR)
+    private static final double SHOOTER_TPR = 28; // 20:1 UltraPlanetary
+    private static final double INTAKE_TPR = 288.0;   // 72:1 Core Hex
+    private static final double TARGET_SHOOTER_RPM = -3200.0;
+    private static final double RPM_TOLERANCE = 50.0; // +/- 50 RPM tolerance
 
     @Override
     public void runOpMode() {
@@ -75,52 +81,34 @@ public class AutonomousPrimeBlue extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         );
         
-        //Movimento 1 - Andar pra esquerda para a base AZUL. 
-        frontLeft.setPower(-0.8);
-        frontRight.setPower(0.8);
-        backLeft.setPower(0.8);
-        backRight.setPower(-0.);
-        sleep(800);
         
-        //Movimento 2 - Parar para o jogador humano colocar os artefatos dentro no robô.
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-
-        //Movimento 3 - Andar pra direita para o triângulo inferior.
-        frontLeft.setPower(0.8);
-        frontRight.setPower(-0.8);
-        backLeft.setPower(-0.8);
-        backRight.setPower(0.8);
-        sleep(800);
-        //movimento 4 - Ajuste de ângulo para o shooter.
-        frontLeft.setPower(0.3);
-        frontRight.setPower(0);
-        backLeft.setPower(0.3);
-        backRight.setPower(0.3);
-        sleep(400);
-        //movimento 5 - Ajuste de ângulo para o shooter.
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        Shooter.setPower(0.9);
-        Intake.setPower(0.9);
-        sleep(5000);
-        //Parar todos os motores
-        Shooter.setPower(0);
-        Intake.setPower(0);
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-
-
-
+        
+    
         imu.initialize(new IMU.Parameters(revOrientation));
 
         while (opModeIsActive()) {
+                    // G. ENCODER READINGS & CALCULATIONS
+        // The getVelocity() method of DcMotorEx gives Ticks/Second
+        double shooterVelocity_TPS = Shooter.getVelocity();
+        
+        // Calculate RPM: (Ticks/Sec / Ticks/Rev) * 60 Sec/Min
+        double shooterRPM = (shooterVelocity_TPS / SHOOTER_TPR) * 60.0;
+        
+        // Calculate RPS: (Ticks/Sec / Ticks/Rev)
+        double shooterRPS = shooterVelocity_TPS / SHOOTER_TPR; // RPS
+        
+        double shooterTicks = Shooter.getCurrentPosition(); // Current Position (Ticks)
+
+        // H. READY STATUS (For color-changing telemetry)
+        boolean isShooterReady = (shooterRPM >= (TARGET_SHOOTER_RPM - RPM_TOLERANCE))
+                                 && (shooterState != 0); // Must be spinning AND intended to be ON
+
+        // The telemetry changes color by using a formatting tag, usually interpreted by the SDK.
+        // ** (Bold) or * (Italic) often triggers color changes based on values.
+        String readyStatus = isShooterReady ? 
+                             "**READY (" + (int)TARGET_SHOOTER_RPM + " RPM)**" : 
+                             "Warming Up (" + (int)TARGET_SHOOTER_RPM + " RPM)";
+
             telemetry.addData("Status", "Running");
             telemetry.update();
 
