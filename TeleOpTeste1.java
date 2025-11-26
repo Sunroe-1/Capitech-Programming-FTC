@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name = "TeleOpTeste1", group = "TeleOp")
-public class TeleOpTeste1 extends OpMode {
+@TeleOp(name = "TeleOpTeste2", group = "TeleOp")
+public class TeleOpTeste2 extends OpMode {
     private DcMotor frontRight, backRight, frontLeft, backLeft;
     private DcMotor Intake, Shooter;
     private IMU imu;
