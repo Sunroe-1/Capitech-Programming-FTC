@@ -147,20 +147,19 @@ public class TeleOpTeste2 extends OpMode {
        if (isXButtonPressed && !wasXButtonPressed) {
            wasXButtonPressed = true;
        }
-       else if (isBButtonPressed && !wasBButtonPressed) {
+       
+       if (isBButtonPressed && !wasBButtonPressed) {
            wasBButtonPressed = true;}
-       else {
-           Intake.setPower(0.0);
-       }
 
-       if isShooterRunning = true; {
-           Intake.setPower(-0.8);
-       }
-       else if wasBButtonPressed = true; {
-           Intake.setPower(-0.7);
-       }
-        else if wasXButtonPressed = true; {
-           Intake.setPower(-0.0);
+       if (wasBButtonPressed) {
+            shooter.setPower(-0.8);
+        } 
+        else if (wasXButtonPressed) {
+            shooter.setPower(-0.7);
+        }
+        else {
+            shooter.setPower(0.0);
+
         }
        }
          
@@ -188,6 +187,11 @@ public class TeleOpTeste2 extends OpMode {
         telemetry.addData("Shooter Power", Shooter.getPower());
         telemetry.addData("Intake Power", Intake.getPower());
         
+        telemetry.addData("----------", "");
+        telemetry.addData("---Machine State Status---", "");
+        telemetry.addData("Shooter State1", wasBButtonPressed ? "ON" : "OFF");
+        telemetry.addData("Shooter State2", wasXButtonPressed ? "ON" : "OFF");
+
         telemetry.update();
     }
 
