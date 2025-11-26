@@ -19,7 +19,6 @@ public class TeleOpTeste2 extends OpMode {
     private boolean isShooterRunning = false; // Remembers if the shooter should be ON or OFF
     private boolean wasLeftTriggerPressed = false; // Remembers the trigger's state from the *last loop*
     private boolean wasAButtonPressed = false; // Remembers the 'A' button's state from the *last loop*
-    +
     private boolean wasBButtonPressed = false; // Remembers the 'B' button's state from the *last loop*
     private boolean wasXButtonPressed = false; // Remembers the 'X' button's state from the *last loop*
     private boolean wasYButtonPressed = false; // Remembers the 'Y' button's state from the *last loop*
@@ -111,71 +110,14 @@ public class TeleOpTeste2 extends OpMode {
         // 5. Call the ROBOT-CENTRIC drive function
         drive(robotForward, robotStrafe, robotRotate);
 
-        boolean isBButtonPressed = gamepad1.b;
-        boolean isYButtonPressed = gamepad1.y;
-
-        if (isBButtonPressed && !wasBButtonPressed) {
-            isShooterRunning = true; // Turn the shooter's "memory" ON
-        }
-        
-        // Check for 'A' Button *press* (was not pressed, now is) -> Toggle OFF
-        if (isAButtonPressed && !wasAButtonPressed) {
-            isShooterRunning = false; // Turn the shooter's "memory" OFF
-        }
-
-       if (isYButtonPressed && !wasYButtonPressed) {
-            isShooterRunning = true; // Turn the shooter's "memory" ON
-        }
-        
-        // Check for 'A' Button *press* (was not pressed, now is) -> Toggle OFF
-        if (isAButtonPressed && !wasAButtonPressed) {
-            isShooterRunning = false; // Turn the shooter's "memory" OFF
-        }
-
-
-        if (gamepad1.b) {
-            Shooter.setPower(Power1);
-        }   
-        else if (gamepad1.x) {
-            Shooter.setPower(Power2);
-        }
-        else {
-            Shooter.setPower(0.0);
-        }
-        
-        if (gamepad1.x) {
-            Shooter.setPower(Power2);
-        }   
-        else if (gamepad1.x) {
-            Shooter.setPower(Power1);
-        }
-        else {
-            Shooter.setPower(0.0);
-        }
-        
-
-        // --- Intake and Shooter Controls ---
-
-        // --- 1. Intake Logic (Simple If/Else If/Else) ---
-        // Right Trigger (analog > 0.1) runs intake forward/in
-        if (gamepad1.right_trigger > 0.1) {
-            Intake.setPower(0.8);
-        } 
-        // Right Bumper (boolean) runs intake reverse/out
-        else if (gamepad1.right_bumper) {
-            Intake.setPower(-0.8);
-        } 
-        // Neither pressed stops the intake
-        else {
-            Intake.setPower(0.0);
-        }
-
         // --- 2. Shooter Logic (State Machine) ---
 
         // A. Get current state of all relevant buttons
         boolean isLeftTriggerPressed = gamepad1.left_trigger > 0.5;
         boolean isAButtonPressed = gamepad1.a;
         boolean isLeftBumperPressed = gamepad1.left_bumper;
+        boolean isBButtonPressed = gamepad1.b;
+        boolean isXButtonPressed = gamepad1.x;
 
         // B. Check for "Edges" (new button presses) to update the state
         // Check for Left Trigger *press* (was not pressed, now is) -> Toggle ON
@@ -201,11 +143,27 @@ public class TeleOpTeste2 extends OpMode {
         else {
             Shooter.setPower(0.0); // State is OFF, stop
         }
-        
        
+       if (isXButtonPressed && !wasXButtonPressed) {
+           wasXButtonPressed = true;
+       }
+       else if (isBButtonPressed && !wasBButtonPressed) {
+           wasBButtonPressed = true;}
+       else {
+           Intake.setPower(0.0);
+       }
 
-       Shooter.setPower(Power1); = Shooter.setPower(-0.8);
-       Shooter.SetPower(Power2); = Shooter.SetPower(-0.7);
+       if isShooterRunning = true; {
+           Intake.setPower(-0.8);
+       }
+       else if wasBButtonPressed = true; {
+           Intake.setPower(-0.7);
+       }
+        else if wasXButtonPressed = true; {
+           Intake.setPower(-0.0);
+        }
+       }
+         
 
 
         // D. Update "previous" state variables for the *next* loop
