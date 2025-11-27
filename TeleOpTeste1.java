@@ -145,17 +145,17 @@ public class TeleOpTeste1 extends OpMode {
 
 // Left Bumper is the highest priority override (Reverse/Spit out)
 if (isLeftBumperPressed) {
-    Shooter.setPower(0.8);
+    Shooter.setPower(0.75);
     // Note: We don't change shooterState, so when bumper is released, it goes back to memory.
 } 
 // If not overriding, set power based on the stored state
 else if (shooterState == 1) {
     // SPEED_A: Default shooting speed (0.8)
-    Shooter.setPower(-0.8);
+    Shooter.setPower(-0.75);
 } 
 else if (shooterState == 2) {
     // SPEED_B: Slower shooting speed (0.7)
-    Shooter.setPower(-0.7);
+    Shooter.setPower(-0.65);
 } 
 else { // shooterState == 0
     // OFF: Stop motor

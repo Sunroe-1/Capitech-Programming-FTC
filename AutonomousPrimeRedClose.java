@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -28,18 +29,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-
-@Autonomous(name = "AutonomousPrimeBlue", group = "Autonomous")
-public class AutonomousPrimeBlue extends LinearOpMode {
+@Autonomous(name = "AutonomousPrimeRedClose", group = "Auto")
+public class AutonomousPrimeRedClose extends LinearOpMode {
     private DcMotor frontRight, backRight, frontLeft, backLeft;
-    private DcMotorEx Intake, Shooter; // CORRECT: Use DcMotorEx for velocity features
+    private DcMotor Intake, Shooter;
     private IMU imu;
-
-    // 2. CONSTANTS (Ticks Per Revolution - TPR)
-    private static final double SHOOTER_TPR = 28; // 20:1 UltraPlanetary
-    private static final double INTAKE_TPR = 288.0;   // 72:1 Core Hex
-    private static final double TARGET_SHOOTER_RPM = -3200.0;
-    private static final double RPM_TOLERANCE = 50.0; // +/- 50 RPM tolerance
 
     @Override
     public void runOpMode() {
@@ -79,7 +73,6 @@ public class AutonomousPrimeBlue extends LinearOpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         );
-        
         Shooter.setPower(0.75);
         sleep(2000);
         Shooter.setPower(0.75);
@@ -91,12 +84,7 @@ public class AutonomousPrimeBlue extends LinearOpMode {
         frontRight.setPower(0.8);
         backLeft.setPower(0.8);
         backRight.setPower(-0.8);
-        sleep(2300);
-         frontLeft.setPower(0.8);
-        frontRight.setPower(-0.8);
-        backLeft.setPower(-0.8);
-        backRight.setPower(0.8);
-        sleep(900);
+        sleep(1000);
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
@@ -106,10 +94,10 @@ public class AutonomousPrimeBlue extends LinearOpMode {
         imu.initialize(new IMU.Parameters(revOrientation));
 
         while (opModeIsActive()) {
-            
             telemetry.addData("Status", "Running");
+            telemetry.addData("Meow meow, robot is running", "Meow, meow and meow :3");
             telemetry.update();
-
+         
 
     }
     }

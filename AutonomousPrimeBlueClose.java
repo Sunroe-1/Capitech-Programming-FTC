@@ -29,8 +29,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 
-@Autonomous(name = "AutonomousPrimeBlue", group = "Autonomous")
-public class AutonomousPrimeBlue extends LinearOpMode {
+@Autonomous(name = "AutonomousPrimeBlueClose", group = "Autonomous")
+public class AutonomousPrimeBlueClose extends LinearOpMode {
     private DcMotor frontRight, backRight, frontLeft, backLeft;
     private DcMotorEx Intake, Shooter; // CORRECT: Use DcMotorEx for velocity features
     private IMU imu;
@@ -87,12 +87,7 @@ public class AutonomousPrimeBlue extends LinearOpMode {
         sleep(6000);
         Intake.setPower(0);
         Shooter.setPower(0);
-        frontLeft.setPower(-0.8);
-        frontRight.setPower(0.8);
-        backLeft.setPower(0.8);
-        backRight.setPower(-0.8);
-        sleep(2300);
-         frontLeft.setPower(0.8);
+        frontLeft.setPower(0.8);
         frontRight.setPower(-0.8);
         backLeft.setPower(-0.8);
         backRight.setPower(0.8);
